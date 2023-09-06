@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import Sidebar from "../components/Sidebar";
 import Maincontent from "../components/Maincontent";
-import RightNav from "../components/header/RightNav";
 import LeftNav from "../components/header/LeftNav";
 import { useUserContext } from "../context/UserContext";
 import useLogin from "../hooks/useLogin";
@@ -25,19 +24,19 @@ function ChatPage() {
 
   return (
     <>
-      {/* <div className="container-fluid">
-        <div className="row" style={{ height: "100vh" }}>
-          <div className="col col-md-3 col-lg-4 bg-secondary">
+      <div className="container-fluid">
+        <div className="row" style={{ width: "100vw", height: "100vh" }}>
+          <div className="col-3 p-0 border-end border-secondary-subtle">
             <LeftNav />
             <Sidebar />
           </div>
-          <div className="col bg-dark">
-            <RightNav />
+          <div className="col p-0 bg-danger-subtle ">
+            {/* <RightNav /> */}
             <Maincontent />
           </div>
         </div>
-      </div> */}
-      <div className="text-light">
+      </div>
+      {/* <div className="text-light">
         <nav className="navbar d-flex">
           <h4 className="text-dark ms-3">{user?.fullName}</h4>
           {user ? (
@@ -83,7 +82,7 @@ function ChatPage() {
             <Maincontent />
           </div>
         </div>
-      </div>
+      </div> */}
     </>
   );
 }

@@ -45,33 +45,33 @@ io.on("connection", (socket) => {
     cb(`joined ${id}`);
   });
 
-  socket.on("init-auto-join", (user) => {
-    socket.join(user._id);
-    console.log(user._id + ` joined`);
+  socket.on("init-auto-join", (chats) => {
+    chats.forEach((chat) => {
+      socket.join(chat._id);
+      console.log(`joined ${chat.chatname}`);
+    });
+    // socket.join(user._id);
+    // console.log(user._id + ` joined`);
   });
 
-  // socket.on("try-send", (msg) => {
-  //   console.log("message received: ", msg);
-  //   // const newMsg = "hurrey.... " + msg;
-  //   socket.broadcast.emit("try-receive", msg);
-  // });
-
   socket.on("send-msg", (msg) => {
+    socket.to(msg.chat._id).emit("receive-msg", msg);
     // const x = chats.filter(chat => chat._id===chatId);
     // if(x.length < 1){
     //   console.log('No chat exist');
     //   return;
     // }
-    const members = msg.chat.members.filter((id) => id !== msg.sender);
 
-    members.forEach((id) => socket.to(id).emit("receive-msg", msg));
+    // const members = msg.chat.members.filter((id) => id !== msg.sender);
+
+    // members.forEach((id) => socket.to(id).emit("receive-msg", msg));
 
     // console.log(sender + ": " + msg + " from " + roomId);
     // socket.broadcast.emit("receive-msg", msg, "server");
   });
 
   socket.off("init-auto-join", (user) => {
-    socket.emit("user left");
     socket.leave(user._id);
+    socket.emit("user left");
   });
 });
