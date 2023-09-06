@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 const userSchema = new mongoose.Schema({
   fullName: {
-    type: Stirng,
+    type: String,
     required: true,
     trim: true,
   },
