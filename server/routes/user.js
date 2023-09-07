@@ -6,19 +6,22 @@ router.get("/", async (req, res) => {
     const users = await User.find({});
     res.json(users);
   } catch (error) {
-    res.status(400).json(error.message);
+    res.status(500).json(error.message);
   }
 });
 
 router.post("/signup", async (req, res) => {
-  const { name, email, password } = req.body;
-  const user = await User.findOne({ email });
-  if (user) {
-    throw new Error("user already exists");
+  try {
+    const { name, email, password } = req.body;
+    const user = await User.findOne({ email });
+    if (user) {
+      res.status(400).json({ message: "user already exists" });
+    }
+    const newUser = await User.create({ fullName: name, email, password });
+    res.json(newUser);
+  } catch (error) {
+    res.status(500).json(error);
   }
-
-  const newUser = await User.create({ fullName: name, email, password });
-  res.json(newUser);
 });
 
 router.post("/login", async (req, res) => {
@@ -27,7 +30,7 @@ router.post("/login", async (req, res) => {
     const data = await User.findOne({ email });
     console.log(data, 28);
     if (data.password === password) res.json(data);
-    else res.json(400).json("incorrect password");
+    else res.status(400).json("incorrect password");
   } catch (error) {
     res.status(500).json(error);
   }

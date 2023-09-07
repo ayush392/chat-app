@@ -1,12 +1,14 @@
 const router = require("express").Router();
 const dummyMessages = require("../data/messages");
 const Message = require("../models/messageModel");
+const Chat = require("../models/chatModel");
 
-router.get("/", async (req, res) => {
-  const msg = await Message.find({});
-  res.json(msg);
-});
+// router.get("/", async (req, res) => {
+//   const msg = await Message.find({});
+//   res.json(msg);
+// });
 
+// POST a new message
 router.post("/", async (req, res) => {
   try {
     const { userId, chatId, content } = req.body;
@@ -17,7 +19,13 @@ router.post("/", async (req, res) => {
       content: content,
       sender: userId,
     });
+    const update = await Chat.findByIdAndUpdate(
+      { _id: chatId },
+      { latestMsg: data._id }
+    );
     const msg = await Message.findOne({ _id: data._id }).populate("chat");
+
+    // console.log(update);
     // console.log(data, 20);
     res.status(201).json(msg);
   } catch (error) {

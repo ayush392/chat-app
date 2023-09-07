@@ -22,7 +22,6 @@ const chatSchema = new mongoose.Schema({
   latestMsg: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Message",
-    default: "dummy",
   },
 });
 

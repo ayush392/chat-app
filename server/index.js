@@ -50,28 +50,16 @@ io.on("connection", (socket) => {
       socket.join(chat._id);
       console.log(`joined ${chat.chatname}`);
     });
-    // socket.join(user._id);
-    // console.log(user._id + ` joined`);
   });
 
   socket.on("send-msg", (msg) => {
     socket.to(msg.chat._id).emit("receive-msg", msg);
-    // const x = chats.filter(chat => chat._id===chatId);
-    // if(x.length < 1){
-    //   console.log('No chat exist');
-    //   return;
-    // }
-
-    // const members = msg.chat.members.filter((id) => id !== msg.sender);
-
-    // members.forEach((id) => socket.to(id).emit("receive-msg", msg));
-
-    // console.log(sender + ": " + msg + " from " + roomId);
-    // socket.broadcast.emit("receive-msg", msg, "server");
   });
 
-  socket.off("init-auto-join", (user) => {
-    socket.leave(user._id);
-    socket.emit("user left");
+  socket.off("init-auto-join", (chats) => {
+    chats.forEach((chat) => {
+      socket.leave(chat._id);
+      console.log(`User Left ${chat.chatname}`);
+    });
   });
 });
