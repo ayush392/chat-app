@@ -9,6 +9,15 @@ router.get("/", async (req, res) => {
   res.send(data);
 });
 
+// router.delete("/delete", async (req, res) => {
+//   try {
+//     const d = await Chat.deleteMany({ chatname: "private" });
+//     res.json(d);
+//   } catch (error) {
+//     res.json(error.message);
+//   }
+// });
+
 // Create a new group chat
 router.post("/group", async (req, res) => {
   try {
@@ -21,7 +30,9 @@ router.post("/group", async (req, res) => {
       type: "group",
       members: newMembers,
     });
-    res.json(newGrp);
+    const data = await Chat.findOne({ _id: newGrp._id }).populate("members");
+    console.log(data);
+    res.json(data);
   } catch (error) {
     res.status(500).json(error.message);
   }
@@ -37,7 +48,7 @@ router.get("/:userId", async (req, res) => {
     // console.log(chats);
     res.json(chats);
   } catch (error) {
-    res.status(500).json(error);
+    res.status(500).json(error.message);
   }
 });
 
@@ -46,26 +57,27 @@ router.post("/:id", async (req, res) => {
   try {
     const _id = req.params.id;
     const { id } = req.body;
-    const uid1 = new mongoose.Types.ObjectId(id);
-    const uid2 = new mongoose.Types.ObjectId(_id);
+    let uid1 = new mongoose.Types.ObjectId(id);
+    let uid2 = new mongoose.Types.ObjectId(_id);
 
-    const chat = await Chat.find({
-      type: "private",
-      members: { $all: [uid1, uid2] },
+    const chat = await Chat.findOne({
+      $and: [{ type: "private" }, { members: { $all: [uid1, uid2] } }],
     });
+    console.log(chat);
 
-    if (chat.length > 0) {
+    if (chat !== null) {
       res.json(chat);
     } else {
+      let arr = [uid1, uid2];
       const newChat = await Chat.create({
         chatname: "private",
         type: "private",
-        members: [uid1, uid2],
+        members: arr,
       });
       res.status(201).json(newChat);
     }
   } catch (error) {
-    res.status(500).json(error);
+    res.status(500).json(error.message);
   }
 });
 

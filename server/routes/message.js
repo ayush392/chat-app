@@ -29,7 +29,7 @@ router.post("/", async (req, res) => {
     // console.log(data, 20);
     res.status(201).json(msg);
   } catch (error) {
-    res.status(500).json(error);
+    res.status(500).json(error.message);
   }
 });
 
@@ -40,7 +40,7 @@ router.get("/:id", async (req, res) => {
     const data = await Message.find({ chat: chatId }).populate("chat");
     res.json(data);
   } catch (error) {
-    res.status(500).json(error);
+    res.status(500).json(error.message);
   }
 });
 
