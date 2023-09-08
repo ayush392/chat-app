@@ -9,23 +9,25 @@ function Maincontent() {
   const [msgg, setmsgg] = useState("");
   const socket = useSocket();
   const { user, selectedChat } = useUserContext();
-  let count = 0;
   const messagesEndRef = useRef(null);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView();
   }, [msgg, message]);
 
-  const fetchChats = () => {
+  useEffect(() => {
+    setNewMessage("");
+  }, [selectedChat]);
+
+  const fetchMessages = () => {
     fetch(`http://localhost:4000/api/message/${selectedChat._id}`)
       .then((res) => res.json())
       .then((json) => setmessage(json))
       .catch((e) => console.log(e));
-    console.log(`data fetched`);
+    console.log(selectedChat);
   };
-
   useEffect(() => {
-    selectedChat && fetchChats();
+    selectedChat && fetchMessages();
   }, [selectedChat, msgg]);
 
   useEffect(() => {
@@ -80,20 +82,14 @@ function Maincontent() {
               {message &&
                 message.map((m) => {
                   return (
-                    <p
-                      key={m._id}
-                      className={
-                        user._id === (m.sender?._id || m.sender)
-                          ? "my-1 mb-3 text-end"
-                          : "my-1 mb-3 text-start"
-                      }
-                    >
+                    <p key={m._id} className="my-1 clearfix ">
                       <span
-                        className={
+                        className={`${
                           user._id === m.sender
-                            ? "px-2 py-2 bg-success-subtle rounded"
-                            : "px-2 py-2 bg-info-subtle rounded"
-                        }
+                            ? "bg-success-subtle float-end"
+                            : "bg-info-subtle float-start "
+                        } px-2 py-1 rounded d-block mw-50`}
+                        // style={{ width: "50%" }}
                       >
                         {m.content}
                       </span>
@@ -103,7 +99,6 @@ function Maincontent() {
             </div>
             <div ref={messagesEndRef} />
           </div>
-
           <div className="container-fluid py-2 bg-secondary-subtle ">
             <form onSubmit={handleSubmit} className="d-flex py-1">
               <input
@@ -120,22 +115,6 @@ function Maincontent() {
           </div>
         </div>
       )}
-
-      {/* <div className="mb-2 overflow-y-scroll" style={{ height: "91%" }}>
-        {selectedChat === "" ? (
-          <h3 className="text-secondary m-auto">No msg to display</h3>
-        ) : (
-          <>
-            <RightNav />
-            <div className="mb-2" style={{ height: "91%" }}>
-              {message &&
-                message.map((m, i) => {
-                  return <p key={i}>{m.content}</p>;
-                })}
-            </div>
-          </>
-        )}
-      </div> */}
     </>
   );
 }

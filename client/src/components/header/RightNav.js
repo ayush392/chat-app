@@ -18,9 +18,7 @@ function RightNav() {
             <p className="mb-0 ms-3">
               {selectedChat.type === "group"
                 ? selectedChat.chatname
-                : selectedChat && selectedChat.members[0]._id == user._id
-                ? selectedChat.members[1].fullName
-                : selectedChat && selectedChat.members[0].fullName}
+                : "Dummy name"}
             </p>
           </div>
           <div className="d-flex">

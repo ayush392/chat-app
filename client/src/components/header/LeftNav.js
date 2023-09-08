@@ -1,7 +1,7 @@
 import React from "react";
 import { useUserContext } from "../../context/UserContext";
 
-function LeftNav() {
+function LeftNav({ setIsOpen, setIsGrpOpen }) {
   const { user } = useUserContext();
   return (
     <nav className="navbar bg-body-secondary">
@@ -17,8 +17,20 @@ function LeftNav() {
             <span className="ms-2">{user && user.fullName}</span>
           </div>
           <div className="d-flex">
-            <div className="icon1 me-2">🤵</div>
-            <div className="icon2">👨🏻‍🤝‍👨🏻</div>
+            <div
+              role="button"
+              onClick={() => setIsOpen(true)}
+              className="icon1 me-2"
+            >
+              🤵
+            </div>
+            <div
+              className="icon2"
+              role="button"
+              onClick={() => setIsGrpOpen(true)}
+            >
+              👨🏻‍🤝‍👨🏻
+            </div>
           </div>
         </div>
       </div>

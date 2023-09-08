@@ -4,12 +4,19 @@ import Maincontent from "../components/Maincontent";
 import LeftNav from "../components/header/LeftNav";
 import { useUserContext } from "../context/UserContext";
 import useLogin from "../hooks/useLogin";
+import NewPrivateChat from "../components/NewPrivateChat";
+import ConfirmBox from "../components/ConfirmBox";
+import NewGroupChat from "../components/NewGroupChat";
 
 function ChatPage() {
   const login = useLogin();
   const { user, setUser } = useUserContext();
   const [email, setemail] = useState("");
   const [password, setpassword] = useState("");
+  const [isOpen, setIsOpen] = useState(false);
+  const [isGrpOpen, setIsGrpOpen] = useState(false);
+  const [selectedUser, setSelectedUser] = useState("");
+  const [newChat, setNewChat] = useState("");
 
   const handleLogin = (e) => {
     try {
@@ -27,17 +34,39 @@ function ChatPage() {
       <div className="container-fluid">
         <div className="row" style={{ width: "100vw", height: "100vh" }}>
           <div className="col-3 p-0 border-end border-secondary-subtle">
-            <LeftNav />
-            <Sidebar />
+            {isOpen ? (
+              <NewPrivateChat
+                setIsOpen={setIsOpen}
+                setSelectedUser={setSelectedUser}
+              />
+            ) : isGrpOpen ? (
+              <NewGroupChat
+                setIsGrpOpen={setIsGrpOpen}
+                setNewChat={setNewChat}
+              />
+            ) : (
+              <>
+                <LeftNav setIsOpen={setIsOpen} setIsGrpOpen={setIsGrpOpen} />
+                <Sidebar newChat={newChat} setNewChat={setNewChat} />
+              </>
+            )}
           </div>
           <div className="col p-0 bg-danger-subtle ">
-            {/* <RightNav /> */}
-            <Maincontent />
+            {selectedUser ? (
+              <ConfirmBox
+                selectedUser={selectedUser}
+                setSelectedUser={setSelectedUser}
+                setNewChat={setNewChat}
+                setIsOpen={setIsOpen}
+              />
+            ) : (
+              <Maincontent />
+            )}
           </div>
         </div>
       </div>
-      {/* <div className="text-light">
-        <nav className="navbar d-flex">
+      <div className="text-light">
+        {/* <nav className="navbar d-flex">
           <h4 className="text-dark ms-3">{user?.fullName}</h4>
           {user ? (
             <div className="d-flex">
@@ -73,8 +102,8 @@ function ChatPage() {
               </button>
             </form>
           )}
-        </nav>
-        <div className="row" style={{ height: "100vh" }}>
+        </nav> */}
+        {/* <div className="row" style={{ height: "100vh" }}>
           <div className="col col-3 bg-secondary">
             <Sidebar />
           </div>
@@ -83,6 +112,7 @@ function ChatPage() {
           </div>
         </div>
       </div> */}
+      </div>
     </>
   );
 }

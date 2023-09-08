@@ -2,9 +2,9 @@ import React, { useEffect, useState } from "react";
 import { useUserContext } from "../context/UserContext";
 import { useSocket } from "../context/SocketContext";
 
-function Sidebar() {
+function Sidebar({ newChat, setNewChat }) {
   const [chatdata, setChatdata] = useState([]);
-  const { user, selectedChat, setSelectedChat } = useUserContext();
+  const { user, selectedChat, setSelectedChat, fetchAgain } = useUserContext();
   const socket = useSocket();
 
   useEffect(() => {
@@ -17,49 +17,60 @@ function Sidebar() {
         .then((res) => res.json())
         .then((json) => setChatdata(json))
         .catch((e) => console.log(e));
-  }, [user]);
+  }, [user, fetchAgain]);
+
+  useEffect(() => {
+    if (newChat !== "") {
+      const schat =
+        chatdata && chatdata.filter((chat) => chat._id === newChat._id);
+      if (schat.length > 0) {
+        console.log(schat[0], "27");
+        setSelectedChat(schat[0]);
+        setNewChat("");
+      }
+    }
+  }, [chatdata]);
 
   return (
     <>
-      {chatdata &&
-        chatdata.map((data, index) => {
-          return (
-            <div
-              key={data._id}
-              role="button"
-              onClick={() => {
-                console.log(data.chatname);
-                setSelectedChat(data);
-              }}
-              className={
-                data._id === selectedChat?._id
-                  ? "bg-success-subtle container-fluid py-2 overflow-y-auto border-bottom"
-                  : "container-fluid py-2 overflow-y-auto h border-bottom "
-              }
-            >
-              <div className="d-flex align-items-center py-1 ">
-                <img
-                  src="https://icon-library.com/images/anonymous-avatar-icon/anonymous-avatar-icon-25.jpg"
-                  alt="profile"
-                  width={"50px"}
-                  className="rounded-circle"
-                />
-                <div className="d-flex flex-column ms-1 ps-2 ">
-                  <p className="mb-0">
-                    {data.type === "group"
-                      ? data.chatname
-                      : data && data.members[0]._id == user._id
-                      ? data.members[1].fullName
-                      : data && data.members[0].fullName}
-                  </p>
-                  <small className="text-secondary">
-                    name: latest messages
-                  </small>
+      <div className="overflow-y-auto" style={{ height: "calc(100vh - 59px)" }}>
+        <div>
+          {chatdata &&
+            chatdata.map((data) => {
+              return (
+                <div
+                  key={data._id}
+                  role="button"
+                  onClick={() => setSelectedChat(data)}
+                  className={`${
+                    data._id === selectedChat?._id ? "bg-success-subtle" : ""
+                  } border-bottom container-fluid py-2`}
+                >
+                  <div className="d-flex align-items-center py-1 ">
+                    <img
+                      src="https://icon-library.com/images/anonymous-avatar-icon/anonymous-avatar-icon-25.jpg"
+                      alt="profile"
+                      width={"50px"}
+                      className="rounded-circle"
+                    />
+                    <div className="d-flex flex-column ms-1 ps-2 ">
+                      <p className="mb-0">
+                        {data.type === "group"
+                          ? data.chatname
+                          : data && data.members[0]._id == user._id
+                          ? data.members[1].fullName
+                          : data && data.members[0].fullName}
+                      </p>
+                      <small className="text-secondary">
+                        name: latest messages
+                      </small>
+                    </div>
+                  </div>
                 </div>
-              </div>
-            </div>
-          );
-        })}
+              );
+            })}
+        </div>
+      </div>
     </>
   );
 }
