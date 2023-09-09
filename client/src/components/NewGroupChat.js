@@ -51,7 +51,7 @@ function NewGroupChat({ setIsGrpOpen, setNewChat }) {
   return (
     <>
       {/* <div className=" bg-success-subtle" style={{ height: "3.175rem" }}></div> */}
-      <div className="d-flex align-items-center  bg-success-subtle p-3  ">
+      <div className="d-flex align-items-center p-3  ">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 24 24"
@@ -90,7 +90,7 @@ function NewGroupChat({ setIsGrpOpen, setNewChat }) {
           {selectedUsers.map((user) => {
             return (
               <div key={user._id} className=" d-inline-block me-1">
-                <span className=" rounded-pill bg-light ps-2 small">
+                <span className=" rounded-pill ps-2 small">
                   {user.fullName}
                   <span
                     role="button"
@@ -119,7 +119,7 @@ function NewGroupChat({ setIsGrpOpen, setNewChat }) {
                   <div
                     key={user._id}
                     role="button"
-                    className="border-bottom container-fluid py-2"
+                    className="border-bottom border-secondary border-opacity-50 container-fluid py-2"
                     onClick={() => addMember(user)}
                   >
                     <div className="d-flex align-items-center py-1 ">

@@ -33,9 +33,12 @@ function Sidebar({ newChat, setNewChat }) {
 
   return (
     <>
-      <div className="overflow-y-auto" style={{ height: "calc(100vh - 59px)" }}>
+      <div
+        className="overflow-y-auto bg-black bg-opacity-50"
+        style={{ height: "calc(100vh - 59px)" }}
+      >
         <div>
-          {chatdata &&
+          {chatdata.length > 0 &&
             chatdata.map((data) => {
               return (
                 <div
@@ -43,8 +46,10 @@ function Sidebar({ newChat, setNewChat }) {
                   role="button"
                   onClick={() => setSelectedChat(data)}
                   className={`${
-                    data._id === selectedChat?._id ? "bg-success-subtle" : ""
-                  } border-bottom container-fluid py-2`}
+                    data._id === selectedChat?._id
+                      ? " bg-dark border-start border-3 border-success "
+                      : "border-bottom border-secondary border-opacity-50"
+                  } container-fluid py-2`}
                 >
                   <div className="d-flex align-items-center py-1 ">
                     <img
@@ -57,12 +62,12 @@ function Sidebar({ newChat, setNewChat }) {
                       <p className="mb-0">
                         {data.type === "group"
                           ? data.chatname
-                          : data && data.members[0]._id == user._id
+                          : data && data.members[0]._id === user._id
                           ? data.members[1].fullName
                           : data && data.members[0].fullName}
                       </p>
-                      <small className="text-secondary">
-                        name: latest messages
+                      <small className="text-secondary small">
+                        {`${chatdata?.latestMsg?.content}`}
                       </small>
                     </div>
                   </div>

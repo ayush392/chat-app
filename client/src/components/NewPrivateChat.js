@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useUserContext } from "../context/UserContext";
 
-function NewPrivateChat({ setIsOpen, setSelectedUser }) {
+function NewPrivateChat({ setIsOpen, setSelectedUser, selectedUser }) {
   const [allUsers, setAllUsers] = useState([]);
   const { user } = useUserContext();
 
@@ -16,8 +16,8 @@ function NewPrivateChat({ setIsOpen, setSelectedUser }) {
 
   return (
     <>
-      <div className=" bg-success-subtle" style={{ height: "3.175rem" }}></div>
-      <div className="d-flex align-items-center  bg-success-subtle p-3  ">
+      <div className=" bg-success" style={{ height: "3.175rem" }}></div>
+      <div className="d-flex align-items-center  bg-success p-3  ">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 24 24"
@@ -48,7 +48,9 @@ function NewPrivateChat({ setIsOpen, setSelectedUser }) {
                   <div
                     key={user._id}
                     role="button"
-                    className="border-bottom container-fluid py-2"
+                    className={`${
+                      selectedUser._id === user._id && " bg-black bg-opacity-25"
+                    } border-bottom border-secondary  border-opacity-50 container-fluid py-2`}
                     onClick={() => setSelectedUser(user)}
                   >
                     <div className="d-flex align-items-center py-1 ">

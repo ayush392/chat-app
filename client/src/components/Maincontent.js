@@ -3,7 +3,7 @@ import { useSocket } from "../context/SocketContext";
 import { useUserContext } from "../context/UserContext";
 import RightNav from "./header/RightNav";
 
-function Maincontent() {
+function Maincontent({ setIsGrpInfo }) {
   const [message, setmessage] = useState([]);
   const [newMessage, setNewMessage] = useState("");
   const [msgg, setmsgg] = useState("");
@@ -72,9 +72,9 @@ function Maincontent() {
         </div>
       ) : (
         <div className="d-flex flex-column">
-          <RightNav />
+          <RightNav setIsGrpInfo={setIsGrpInfo} />
           <div
-            className="bg-danger-subtle overflow-y-auto overflow-x-hidden "
+            className="overflow-y-auto overflow-x-hidden bg-black bg-opacity-50"
             style={{ height: "calc(100vh - 118px)" }}
           >
             <br />
@@ -86,8 +86,8 @@ function Maincontent() {
                       <span
                         className={`${
                           user._id === m.sender
-                            ? "bg-success-subtle float-end"
-                            : "bg-info-subtle float-start "
+                            ? "bg-success float-end"
+                            : "bg-dark float-start "
                         } px-2 py-1 rounded d-block mw-50`}
                         // style={{ width: "50%" }}
                       >
@@ -99,16 +99,16 @@ function Maincontent() {
             </div>
             <div ref={messagesEndRef} />
           </div>
-          <div className="container-fluid py-2 bg-secondary-subtle ">
+          <div className="container-fluid py-2">
             <form onSubmit={handleSubmit} className="d-flex py-1">
               <input
                 type="text"
                 value={newMessage}
-                className="form-control"
+                className="form-control bg-black bg-opacity-25 border-0 text-light"
                 onChange={(e) => setNewMessage(e.target.value)}
                 required
               />
-              <button className="btn btn-light ms-2" type="submit">
+              <button className="btn btn-success ms-2" type="submit">
                 Send
               </button>
             </form>

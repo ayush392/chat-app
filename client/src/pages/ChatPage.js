@@ -7,6 +7,7 @@ import useLogin from "../hooks/useLogin";
 import NewPrivateChat from "../components/NewPrivateChat";
 import ConfirmBox from "../components/ConfirmBox";
 import NewGroupChat from "../components/NewGroupChat";
+import GroupInfo from "../components/GroupInfo";
 
 function ChatPage() {
   const login = useLogin();
@@ -15,6 +16,7 @@ function ChatPage() {
   const [password, setpassword] = useState("");
   const [isOpen, setIsOpen] = useState(false);
   const [isGrpOpen, setIsGrpOpen] = useState(false);
+  const [isGrpInfo, setIsGrpInfo] = useState(false);
   const [selectedUser, setSelectedUser] = useState("");
   const [newChat, setNewChat] = useState("");
 
@@ -31,13 +33,14 @@ function ChatPage() {
 
   return (
     <>
-      <div className="container-fluid">
+      <div className="container-fluid bg-dark text-light">
         <div className="row" style={{ width: "100vw", height: "100vh" }}>
-          <div className="col-3 p-0 border-end border-secondary-subtle">
+          <div className="col-3 p-0 border-end border-secondary">
             {isOpen ? (
               <NewPrivateChat
                 setIsOpen={setIsOpen}
                 setSelectedUser={setSelectedUser}
+                selectedUser={selectedUser}
               />
             ) : isGrpOpen ? (
               <NewGroupChat
@@ -51,8 +54,8 @@ function ChatPage() {
               </>
             )}
           </div>
-          <div className="col p-0 bg-danger-subtle ">
-            {selectedUser ? (
+          <div className=" col p-0 ">
+            {isOpen && selectedUser ? (
               <ConfirmBox
                 selectedUser={selectedUser}
                 setSelectedUser={setSelectedUser}
@@ -60,9 +63,14 @@ function ChatPage() {
                 setIsOpen={setIsOpen}
               />
             ) : (
-              <Maincontent />
+              <Maincontent setIsGrpInfo={setIsGrpInfo} />
             )}
           </div>
+          {isGrpInfo && (
+            <div className="col-3 p-0 border-start border-secondary">
+              <GroupInfo setIsGrpInfo={setIsGrpInfo} />
+            </div>
+          )}
         </div>
       </div>
       <div className="text-light">
