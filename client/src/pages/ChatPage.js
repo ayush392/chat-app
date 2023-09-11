@@ -35,7 +35,7 @@ function ChatPage() {
     <>
       <div className="container-fluid bg-dark text-light">
         <div className="row" style={{ width: "100vw", height: "100vh" }}>
-          <div className="col-3 p-0 border-end border-secondary">
+          <div className="col-5 col-lg-3 p-0 border-end border-secondary">
             {isOpen ? (
               <NewPrivateChat
                 setIsOpen={setIsOpen}

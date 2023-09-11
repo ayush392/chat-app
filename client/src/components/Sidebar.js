@@ -4,12 +4,27 @@ import { useSocket } from "../context/SocketContext";
 
 function Sidebar({ newChat, setNewChat }) {
   const [chatdata, setChatdata] = useState([]);
-  const { user, selectedChat, setSelectedChat, fetchAgain } = useUserContext();
+  const { user, selectedChat, setSelectedChat, fetchAgain, setFetchAgain } =
+    useUserContext();
   const socket = useSocket();
 
   useEffect(() => {
-    socket && chatdata && socket.emit("init-auto-join", chatdata);
+    socket && chatdata && socket.emit("init-auto-join", chatdata, user._id);
   }, [chatdata]);
+
+  useEffect(() => {
+    socket &&
+      socket.on("start-new-chat", (x) => {
+        console.log(x, user._id);
+        fetch(`http://localhost:4000/api/chat/${user._id}`)
+          .then((res) => res.json())
+          .then((json) => {
+            console.log("msg fetched");
+            setChatdata(json);
+          })
+          .catch((e) => console.log(e));
+      });
+  });
 
   useEffect(() => {
     user &&
@@ -67,7 +82,7 @@ function Sidebar({ newChat, setNewChat }) {
                           : data && data.members[0].fullName}
                       </p>
                       <small className="text-secondary small">
-                        {`${chatdata?.latestMsg?.content}`}
+                        {`${chatdata?.latestMsg.content}`}
                       </small>
                     </div>
                   </div>

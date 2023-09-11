@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { useUserContext } from "../context/UserContext";
+import { useSocket } from "../context/SocketContext";
 
 function NewGroupChat({ setIsGrpOpen, setNewChat }) {
   const [allUsers, setAllUsers] = useState([]);
   const [selectedUsers, setSelectedUsers] = useState([]);
   const [name, setName] = useState("");
   const { user, setSelectedChat, setFetchAgain } = useUserContext();
+  const socket = useSocket();
 
   useEffect(() => {
     fetch(`http://localhost:4000/api/user`)
@@ -25,27 +27,32 @@ function NewGroupChat({ setIsGrpOpen, setNewChat }) {
   };
 
   const createNewGroup = async (e) => {
-    e.preventDefault();
-    let arr = [];
-    selectedUsers.forEach((user) => {
+    try {
+      e.preventDefault();
+      let arr = [];
+      selectedUsers.forEach((user) => {
+        arr.push(user._id);
+      });
       arr.push(user._id);
-    });
-    arr.push(user._id);
-    const response = await fetch(`http://localhost:4000/api/chat/group`, {
-      method: "POST",
-      headers: { "Content-type": "application/json" },
-      body: JSON.stringify({
-        chatname: name,
-        members: arr,
-      }),
-    });
-    const json = await response.json();
-    console.log(json, "45");
-    if (response.ok) {
-      setNewChat(json);
-      setFetchAgain((prev) => !prev);
+      const response = await fetch(`http://localhost:4000/api/chat/group`, {
+        method: "POST",
+        headers: { "Content-type": "application/json" },
+        body: JSON.stringify({
+          chatname: name,
+          members: arr,
+        }),
+      });
+      const json = await response.json();
+      console.log(json, "45");
+      if (response.ok) {
+        socket.emit("new-chat", json);
+        setNewChat(json);
+        setFetchAgain((prev) => !prev);
+      }
+      setIsGrpOpen(false);
+    } catch (error) {
+      console.log(error, error.message);
     }
-    setIsGrpOpen(false);
   };
 
   return (

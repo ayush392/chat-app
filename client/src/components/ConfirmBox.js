@@ -1,5 +1,6 @@
 import React from "react";
 import { useUserContext } from "../context/UserContext";
+import { useSocket } from "../context/SocketContext";
 
 /*
 - create new chat
@@ -10,6 +11,8 @@ import { useUserContext } from "../context/UserContext";
 
 function ConfirmBox({ selectedUser, setSelectedUser, setNewChat, setIsOpen }) {
   const { user, setSelectedChat, setFetchAgain } = useUserContext();
+  const socket = useSocket();
+
   console.log(selectedUser);
 
   const createNewChat = async (e) => {
@@ -24,6 +27,7 @@ function ConfirmBox({ selectedUser, setSelectedUser, setNewChat, setIsOpen }) {
     if (response.ok) {
       setSelectedUser("");
       setNewChat(json);
+      socket.emit("new-chat", json);
       setFetchAgain((prev) => !prev);
     } else {
       alert("error");

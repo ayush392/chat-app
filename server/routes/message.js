@@ -23,7 +23,9 @@ router.post("/", async (req, res) => {
       { _id: chatId },
       { latestMsg: data._id }
     );
-    const msg = await Message.findOne({ _id: data._id }).populate("chat");
+    const msg = await Message.findOne({ _id: data._id })
+      .populate("sender")
+      .populate("chat");
 
     // console.log(update);
     // console.log(data, 20);
@@ -37,7 +39,9 @@ router.post("/", async (req, res) => {
 router.get("/:id", async (req, res) => {
   try {
     const chatId = req.params.id;
-    const data = await Message.find({ chat: chatId }).populate("chat");
+    const data = await Message.find({ chat: chatId })
+      .populate("sender")
+      .populate("chat");
     res.json(data);
   } catch (error) {
     res.status(500).json(error.message);

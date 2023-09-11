@@ -45,10 +45,18 @@ io.on("connection", (socket) => {
     cb(`joined ${id}`);
   });
 
-  socket.on("init-auto-join", (chats) => {
+  socket.on("init-auto-join", (chats, userId) => {
+    socket.join(userId);
     chats.forEach((chat) => {
       socket.join(chat._id);
       console.log(`joined ${chat.chatname}`);
+    });
+  });
+
+  socket.on("new-chat", (chat) => {
+    console.log("new chat msg received", chat);
+    chat.members.forEach((mem) => {
+      socket.to(mem._id).emit("start-new-chat", mem._id);
     });
   });
 
